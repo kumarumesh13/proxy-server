@@ -19,8 +19,7 @@ app.use((req, res, next) => {
 });
 
 app.post("/authenticate", (req, res) => {
-  const { code , client_id, client_secret, redirect_uri} = Object.assign({}, req.body);;
-  console.log(code , client_id, client_secret, redirect_uri);
+  const { code , client_id, client_secret, redirect_uri} = req.body;
   const data = new FormData();
   data.append("client_id", client_id);
   data.append("client_secret", client_secret);
