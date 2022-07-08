@@ -25,7 +25,7 @@ app.post("/authenticate", (req, res) => {
   data.append("client_secret", client_secret);
   data.append("code", code);
   data.append("redirect_uri", redirect_uri);
-
+  let access_token;
   // Request to exchange code for an access token
   fetch(`https://github.com/login/oauth/access_token`, {
     method: "POST",
@@ -34,7 +34,7 @@ app.post("/authenticate", (req, res) => {
     .then((response) => response.text())
     .then((paramsString) => {
       let params = new URLSearchParams(paramsString);
-      const access_token = params.get("access_token");
+      access_token = params.get("access_token");
 
       // Request to return data of a user that has been authenticated
       return fetch(`https://api.github.com/user`, {
@@ -45,6 +45,7 @@ app.post("/authenticate", (req, res) => {
     })
     .then((response) => response.json())
     .then((response) => {
+      response.access_token = access_token;
       return res.status(200).json(response);
     })
     .catch((error) => {
